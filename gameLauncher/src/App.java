@@ -2,6 +2,8 @@ import First.Games;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+
+import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
 import java.awt.Image;
@@ -109,7 +111,6 @@ public class App {
         
         gamesPanel.setBackground(new Color(000051204)); // Blue 
 
-        System.out.println(gameList.size());
         for (int i = 0; i < gameList.size(); i++){
             
             ImageIcon gameLogo = new ImageIcon(gameList.get(i).getIconPath());
@@ -148,6 +149,9 @@ public class App {
         Desktop dt = Desktop.getDesktop();
         try{
             dt.open(file);
+        }
+        catch (IllegalArgumentException f) {
+            System.err.println("Invalid File Path for Execuatable");
         }
         catch (IOException e){
             System.err.println("Cannot find requested executable");
@@ -200,7 +204,7 @@ public class App {
             gameField4.setText("");
             gameList.add(newGame);
 
-            
+            populateCSV(newGame);
         });
 
 
@@ -250,7 +254,7 @@ public class App {
         BufferedWriter w = null;
 
         try {
-            w = new BufferedWriter(new FileWriter("/src/Data/gameList.csv"));
+            w = new BufferedWriter(new FileWriter("src/Data/gameList.csv", true));
             w.write(g.getName() + ", " + g.getFilePath() + ", " + g.getIconPath() + ", " + g.getGameTime() + ", ");
             w.close();
         }
